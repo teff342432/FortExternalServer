@@ -1,0 +1,28 @@
+name: Build FortExternalServer - Temporada 3
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-2025-vs2026
+
+    steps:
+      - name: Baixar código da Temporada 3
+        uses: actions/checkout@v7
+        with:
+          repository: OGFN-Open-sourceing/FortExternalServer
+          ref: season-3
+
+      - name: Preparar MSBuild
+        uses: microsoft/setup-msbuild@v3
+
+      - name: Compilar
+        run: msbuild FortExternalServer.sln /p:Configuration=Release /p:Platform=x64
+
+      - name: Disponibilizar o executável
+        uses: actions/upload-artifact@v7
+        with:
+          name: FortExternalServer-temporada-3
+          path: Binaries/Win64/FortExternalServer.exe
+          if-no-files-found: error
