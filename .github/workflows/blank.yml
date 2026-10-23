@@ -1,0 +1,23 @@
+name: Build FortExternalServer - Temporada 3
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-2025-vs2026
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: season-3
+
+      - uses: microsoft/setup-msbuild@v3
+
+      - name: Build
+        run: msbuild FortExternalServer.sln /p:Configuration=Release /p:Platform=x64
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: FortExternalServer-temporada-3
+          path: Binaries/Win64/FortExternalServer.exe
+          if-no-files-found: error
