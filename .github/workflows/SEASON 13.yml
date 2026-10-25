@@ -12,11 +12,12 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Baixar codigo
+           - name: Baixar codigo
         uses: actions/checkout@v4
         with:
           ref: season-13
-          submodules: recursive
+          submodules: false
+          fetch-depth: 0
 
       - name: Configurar MSBuild
         uses: microsoft/setup-msbuild@v2
