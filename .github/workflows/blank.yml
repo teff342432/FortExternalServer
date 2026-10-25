@@ -1,4 +1,5 @@
-name: Build FortExternalServer - Temporada 3
+
+name: Build FortExternalServer 13.40
 
 on:
   workflow_dispatch:
@@ -6,19 +7,26 @@ on:
 jobs:
   build:
     runs-on: windows-2025-vs2026
+
     steps:
-            - uses: actions/checkout@v6
+      - name: Baixar codigo
+        uses: actions/checkout@v6
         with:
           repository: OGFN-Open-sourceing/FortExternalServer
-          ref: season-3
+          ref: season-13
+          submodules: recursive
 
-      - uses: microsoft/setup-msbuild@v3
+      - name: Configurar MSBuild
+        uses: microsoft/setup-msbuild@v3
 
-      - name: Build
-        run: msbuild FortExternalServer.sln /p:Configuration=Release /p:Platform=x64
+      - name: Compilar Release x64
+        shell: pwsh
+        run: |
+          msbuild FortExternalServer.sln /m /p:Configuration=Release /p:Platform=x64 /p:FortExternalServerToolset=v143
 
-      - uses: actions/upload-artifact@v7
+      - name: Salvar executavel
+        uses: actions/upload-artifact@v4
         with:
-          name: FortExternalServer-temporada-3
+          name: FortExternalServer-13.40-x64
           path: Binaries/Win64/FortExternalServer.exe
           if-no-files-found: error
