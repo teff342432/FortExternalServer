@@ -1,0 +1,38 @@
+
+name: Build FortExternalServer 13.40
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - season-13
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Baixar codigo
+        uses: actions/checkout@v4
+        with:
+          ref: season-13
+          submodules: recursive
+
+      - name: Configurar MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Compilar Release x64
+        shell: pwsh
+        run: |
+          msbuild FortExternalServer.sln `
+            /m `
+            /p:Configuration=Release `
+            /p:Platform=x64 `
+            /p:FortExternalServerToolset=v143
+
+      - name: Disponibilizar executavel
+        uses: actions/upload-artifact@v4
+        with:
+          name: FortExternalServer-13.40-x64
+          path: Binaries/Win64/FortExternalServer.exe
+          if-no-files-found: error
